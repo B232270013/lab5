@@ -17,7 +17,7 @@
       "description": "Бие даасан спецификаци; шаардлагатай PUT setup-ийг энэ folder дотроо хийнэ. Байхгүй бичлэгийн ID нь санамсаргүй GUID байна.",
       "item": [
         {
-          "name": "Setup: оюутан S01",
+          "name": "Setup: оюутан B231234567",
           "request": {
             "method": "PUT",
             "header": [
@@ -28,14 +28,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\", \"CS202\"]}",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\"]}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "url": "{{baseUrl}}/students/S01"
+            "url": "{{baseUrl}}/students/B231234567"
           },
           "event": [
             {
@@ -51,7 +51,7 @@
           ]
         },
         {
-          "name": "Setup: хичээл C01",
+          "name": "Setup: хичээл CS313",
           "request": {
             "method": "PUT",
             "header": [
@@ -62,14 +62,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"prerequisites\": [\"CS201\", \"CS202\"]}",
+              "raw": "{\"prerequisites\": [\"CS201\"]}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "url": "{{baseUrl}}/courses/C01"
+            "url": "{{baseUrl}}/courses/CS313"
           },
           "event": [
             {
@@ -96,7 +96,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"studentID\": \"S01\", \"courseID\": \"C01\"}",
+              "raw": "{\"studentID\": \"B231234567\", \"courseID\": \"CS313\"}",
               "options": {
                 "raw": {
                   "language": "json"

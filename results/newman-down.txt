@@ -3,14 +3,14 @@ newman
 Lab05 — Хичээлд бүртгүүлэх API
 
 ❏ T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK
-↳ Setup: оюутан S01
-  PUT http://localhost:3000/students/S01 [errored]
+↳ Setup: оюутан B231234567
+  PUT http://localhost:3000/students/B231234567 [errored]
      connect ECONNREFUSED 127.0.0.1:3000
   2. HTTP статус 200
   3. result = OK
 
-↳ Setup: хичээл C01
-  PUT http://localhost:3000/courses/C01 [errored]
+↳ Setup: хичээл CS313
+  PUT http://localhost:3000/courses/CS313 [errored]
      connect ECONNREFUSED 127.0.0.1:3000
   5. HTTP статус 200
   6. result = OK
@@ -236,7 +236,7 @@ Lab05 — Хичээлд бүртгүүлэх API
 ├─────────────────────────┼──────────┼──────────┤
 │              assertions │       72 │       72 │
 ├─────────────────────────┴──────────┴──────────┤
-│ total run duration: 497ms                     │
+│ total run duration: 536ms                     │
 ├───────────────────────────────────────────────┤
 │ total data received: 0B (approx)              │
 └───────────────────────────────────────────────┘
@@ -251,12 +251,12 @@ Lab05 — Хичээлд бүртгүүлэх API
  002.  AssertionError  HTTP статус 200                                                                                                                            
                        expected PostmanResponse{ …(5) } to have property 'code'                                                                                   
                        at assertion:0 in test-script                                                                                                              
-                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: оюутан S01"                                                                
+                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: оюутан B231234567"                                                         
 [90m      [39m[90m                [39m[90m                                                                                                                                            [39m
  003.  JSONError       result = OK                                                                                                                                
                        "undefined" is not valid JSON                                                                                                              
                        at assertion:1 in test-script                                                                                                              
-                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: оюутан S01"                                                                
+                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: оюутан B231234567"                                                         
 [90m      [39m[90m                [39m[90m                                                                                                                                            [39m
  004.  Error                                                                                                                                                      
                        connect ECONNREFUSED 127.0.0.1:3000                                                                                                        
@@ -266,12 +266,12 @@ Lab05 — Хичээлд бүртгүүлэх API
  005.  AssertionError  HTTP статус 200                                                                                                                            
                        expected PostmanResponse{ …(5) } to have property 'code'                                                                                   
                        at assertion:0 in test-script                                                                                                              
-                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: хичээл C01"                                                                
+                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: хичээл CS313"                                                              
 [90m      [39m[90m                [39m[90m                                                                                                                                            [39m
  006.  JSONError       result = OK                                                                                                                                
                        "undefined" is not valid JSON                                                                                                              
                        at assertion:1 in test-script                                                                                                              
-                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: хичээл C01"                                                                
+                       inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / Setup: хичээл CS313"                                                              
 [90m      [39m[90m                [39m[90m                                                                                                                                            [39m
  007.  Error                                                                                                                                                      
                        connect ECONNREFUSED 127.0.0.1:3000                                                                                                        
