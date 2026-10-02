@@ -1,0 +1,14 @@
+{
+  "name": "lab05-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "F.CSA313 Lab05 Postman/Newman API tests",
+  "scripts": {
+    "start": "node server.js",
+    "test": "newman run lab05-collection.json",
+    "verify": "bash scripts/run-evidence.sh"
+  },
+  "devDependencies": {
+    "newman": "6.2.1"
+  }
+}
