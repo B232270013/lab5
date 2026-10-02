@@ -1,0 +1,219 @@
+newman
+
+Lab05 — Хичээлд бүртгүүлэх API — зориуд FAIL
+
+❏ T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK
+↳ Setup: оюутан S01
+  PUT http://localhost:3000/students/S01 [200 OK, 178B, 16ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C01
+  PUT http://localhost:3000/courses/C01 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK
+  POST http://localhost:3000/registrations [201 Created, 202B, 2ms]
+  1. ЗОРИУД FAIL: HTTP статус 200
+  ✓  result = OK
+  ✓  registrationID нь тоо
+
+❏ T02 — Байхгүй оюутанд ERROR_NO_STUDENT
+↳ Setup: хичээл C02
+  PUT http://localhost:3000/courses/C02 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Байхгүй оюутанд ERROR_NO_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 192B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_NO_STUDENT
+
+❏ T03 — Идэвхгүй оюутанд ERROR_INACTIVE_STUDENT
+↳ Setup: оюутан S03
+  PUT http://localhost:3000/students/S03 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C03
+  PUT http://localhost:3000/courses/C03 [200 OK, 178B, 3ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Идэвхгүй оюутанд ERROR_INACTIVE_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 198B, 4ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_INACTIVE_STUDENT
+
+❏ T04 — Байхгүй хичээлд ERROR_NO_COURSE
+↳ Setup: оюутан S04
+  PUT http://localhost:3000/students/S04 [200 OK, 178B, 6ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Байхгүй хичээлд ERROR_NO_COURSE
+  POST http://localhost:3000/registrations [200 OK, 191B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_NO_COURSE
+
+❏ T05 — Огт үзээгүй урьдач нөхцөлд ERROR_PREREQUISITES
+↳ Setup: оюутан S05
+  PUT http://localhost:3000/students/S05 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C05
+  PUT http://localhost:3000/courses/C05 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Огт үзээгүй урьдач нөхцөлд ERROR_PREREQUISITES
+  POST http://localhost:3000/registrations [200 OK, 223B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_PREREQUISITES
+  ✓  missing нь дутуу хичээлүүдтэй яг таарна
+
+❏ T06 — Зарим урьдач нөхцөл дутуу бол ERROR_PREREQUISITES
+↳ Setup: оюутан S06
+  PUT http://localhost:3000/students/S06 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C06
+  PUT http://localhost:3000/courses/C06 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Зарим урьдач нөхцөл дутуу бол ERROR_PREREQUISITES
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_PREREQUISITES
+  ✓  missing нь дутуу хичээлүүдтэй яг таарна
+
+❏ T07 — Оюутан ба хичээл хоёул байхгүй: ERROR_NO_STUDENT
+↳ POST: Оюутан ба хичээл хоёул байхгүй: ERROR_NO_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 192B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_NO_STUDENT
+
+❏ T08 — Идэвхгүй оюутан ба байхгүй хичээл: ERROR_INACTIVE_STUDENT
+↳ Setup: оюутан S08
+  PUT http://localhost:3000/students/S08 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Идэвхгүй оюутан ба байхгүй хичээл: ERROR_INACTIVE_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = ERROR_INACTIVE_STUDENT
+
+❏ T09 — Урьдач нөхцөлгүй хичээл, хоосон coursesTaken: OK
+↳ Setup: оюутан S09
+  PUT http://localhost:3000/students/S09 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C09
+  PUT http://localhost:3000/courses/C09 [200 OK, 178B, 0µs]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Урьдач нөхцөлгүй хичээл, хоосон coursesTaken: OK
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  ✓  HTTP статус 201
+  ✓  result = OK
+  ✓  registrationID нь тоо
+
+❏ T10 — studentID дутуу: ERROR_BAD_REQUEST
+↳ Setup: оюутан S10
+  PUT http://localhost:3000/students/S10 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C10
+  PUT http://localhost:3000/courses/C10 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: studentID дутуу: ERROR_BAD_REQUEST
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  HTTP статус 400
+  ✓  result = ERROR_BAD_REQUEST
+
+❏ T11 — courseID дутуу: ERROR_BAD_REQUEST
+↳ Setup: оюутан S11
+  PUT http://localhost:3000/students/S11 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C11
+  PUT http://localhost:3000/courses/C11 [200 OK, 178B, 1ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: courseID дутуу: ERROR_BAD_REQUEST
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 2ms]
+  ✓  HTTP статус 400
+  ✓  result = ERROR_BAD_REQUEST
+
+❏ T12 — studentID хоосон: ERROR_BAD_REQUEST
+↳ Setup: оюутан S12
+  PUT http://localhost:3000/students/S12 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C12
+  PUT http://localhost:3000/courses/C12 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: studentID хоосон: ERROR_BAD_REQUEST
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  HTTP статус 400
+  ✓  result = ERROR_BAD_REQUEST
+
+❏ T13 — Буруу JSON: ERROR_BAD_JSON
+↳ Setup: оюутан S13
+  PUT http://localhost:3000/students/S13 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ Setup: хичээл C13
+  PUT http://localhost:3000/courses/C13 [200 OK, 178B, 2ms]
+  ✓  HTTP статус 200
+  ✓  result = OK
+
+↳ POST: Буруу JSON: ERROR_BAD_JSON
+  POST http://localhost:3000/registrations [400 Bad Request, 199B, 2ms]
+  ✓  HTTP статус 400
+  ✓  result = ERROR_BAD_JSON
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              34 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              34 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               0 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              72 │               1 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 484ms                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 768B (approx)                          │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 2ms [min: 1ms, max: 16ms, s.d.: 2ms] │
+└─────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                                   [39m
+[90m    [39m[90m                [39m[90m                                                                                                          [39m
+ 1.  AssertionError  ЗОРИУД FAIL: HTTP статус 200                                                                             
+                     expected response to have status code 200 but got 201                                                    
+                     at assertion:0 in test-script                                                                            
+                     inside "T01 — Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK / POST: Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK" 
+
+exit=1

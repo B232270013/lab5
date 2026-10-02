@@ -1,0 +1,152 @@
+{
+  "pass": {
+    "exitCode": 0,
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 72,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    }
+  },
+  "fail": {
+    "exitCode": 1,
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 72,
+        "pending": 0,
+        "failed": 1
+      },
+      "testScripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    }
+  },
+  "down": {
+    "exitCode": 1,
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 34
+      },
+      "tests": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 72,
+        "pending": 0,
+        "failed": 72
+      },
+      "testScripts": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    }
+  }
+}
