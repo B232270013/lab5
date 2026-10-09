@@ -1,0 +1,9 @@
+# Use this workspace to collaborate
+workspace:
+  id: 833279b5-05df-4b11-8799-30b25e14d413
+
+localResources:
+  collections:
+    - ../lab05-collection-fail.json
+    - ../lab05-collection.json
+    - ../lab05-public-collection.json
