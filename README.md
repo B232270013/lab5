@@ -36,6 +36,32 @@ export PATH="$(cat /tmp/lab05-tools/node-path.txt):$PATH"
 
 Node.js өөрийн машинд суусан бол энэ PATH тохируулга шаардлагагүй. `npm ci` нь package-lock.json дахь Newman-ийн хувилбарыг суулгана.
 
+## Даалгавар 1: Анхны хүсэлт ба oracle
+
+Тусдаа [lab05-task1-collection.json](lab05-task1-collection.json)-ийг Postman-д Import хийгээд Collection Runner-аар дарааллаар ажиллуулна. Collection variable нь `baseUrl=http://localhost:3000`; гурван хүсэлт бүгд `{{baseUrl}}` ашиглана. Body нь raw JSON, `Content-Type: application/json` байна.
+
+1. `PUT {{baseUrl}}/students/B231234567` — `{"status":"active","coursesTaken":["CS201"]}`
+2. `PUT {{baseUrl}}/courses/CS313` — `{"prerequisites":["CS201"]}`
+3. `POST {{baseUrl}}/registrations` — `{"studentID":"B231234567","courseID":"CS313"}`
+
+POST хүсэлтийн Tests (Post-response) script нь яг хоёр oracle агуулна:
+
+```javascript
+pm.test("HTTP статус 201", function () {
+    pm.response.to.have.status(201);
+});
+
+pm.test("result = OK", function () {
+    pm.expect(pm.response.json().result).to.eql("OK");
+});
+```
+
+Сервер ажиллаж байх үед Newman-аар шалгах:
+
+```sh
+npx newman run lab05-task1-collection.json
+```
+
 ## Тест дизайны 5 алхам
 
 1. Бие даан тестлэгдэх функц: `POST /registrations`; PUT endpoint-ууд зөвхөн initialization, POST-ийн хариу oracle болно.
@@ -44,47 +70,59 @@ Node.js өөрийн машинд суусан бол энэ PATH тохируу
 4. Спецификаци: амжилт, дөрвөн бизнес алдаа, давхар алдаа, хязгаарын тохиолдлуудыг сонгов.
 5. Бодит тест: спецификаци бүр тусдаа folder, өөрийн PUT setup, POST хүсэлт, `pm.test` oracle-уудтай байна.
 
-## Сонголт ба төлөөлөх утга
+## Даалгавар 2: Тест дизайн — сонголт ба утгын хүснэгт
 
-| Сонголт | Эквивалент анги | Төлөөлөх утга |
-|---|---|---|
-| studentID | Байгаа, идэвхтэй | `B231234567`, status=`active` |
-| studentID | Байгаа, идэвхгүй | `S03`, status=`inactive` |
-| studentID | Байхгүй | `missing_student_{{$guid}}`, PUT хийхгүй |
-| Оюутны үзсэн хичээл | Урьдач нөхцөл хангана | `["CS201", "CS202"]` |
-| Оюутны үзсэн хичээл | Урьдач нөхцөл хангахгүй | `[]` эсвэл `["CS201"]` |
-| courseID | Байгаа | `CS313`, PUT setup-тай |
-| courseID | Байхгүй | `missing_course_{{$guid}}`, PUT хийхгүй |
-| Хичээлийн урьдач нөхцөл | Бүгд үзсэн | required=`["CS201", "CS202"]`, taken ижил |
-| Хичээлийн урьдач нөхцөл | Огт үзээгүй | required=`["CS201", "CS202"]`, taken=`[]` |
-| Хичээлийн урьдач нөхцөл | Зарим нь үзсэн | required=`["CS201", "CS202"]`, taken=`["CS201"]` |
-| Хичээлийн урьдач нөхцөл | Урьдач нөхцөлгүй | required=`[]`, taken=`[]` |
-| Хүсэлтийн талбар | studentID дутуу | `{"courseID":"C10"}` |
-| Хүсэлтийн талбар | courseID дутуу | `{"studentID":"S11"}` |
-| Хүсэлтийн талбар | Хоосон ID | `{"studentID":"","courseID":"C12"}` |
-| Хүсэлтийн формат | Буруу JSON | `{"studentID":` |
+### Сонголт ба төлөөлөх утга
 
-Үзсэн хичээл ба урьдач нөхцөл нь хоорондоо хамааралтай тул бүх сонголтын Cartesian үржвэрийг механикаар авахгүй. Байхгүй оюутанд status/coursesTaken, байхгүй хичээлд prerequisites оноох боломжгүй. Урьдач нөхцөлгүй хичээлд «зарим нь үзсэн» буюу «дутуу» анги боломжгүй.
+`studentID` болон `courseID`-гийн хүчинтэй байдал нь тухайн ID-тай бичлэг серверт байгаа эсэхийг илэрхийлнэ; оюутны хувьд төлөвийг мөн ялгана. Үзсэн хичээлүүдийг `coursesTaken`, хичээлийн урьдач нөхцөлийг `prerequisites` талбараар өгнө.
 
-## Спецификаци
+| Сонголт | Эквивалент анги | Төлөөлөх утга / setup | Хамрах спецификаци |
+|---|---|---|---|
+| studentID-гийн хүчинтэй байдал | Байгаа, идэвхтэй | `B231234567`; `status="active"` | T01 |
+| studentID-гийн хүчинтэй байдал | Байгаа, идэвхгүй | `S03`; `status="inactive"` | T03 |
+| studentID-гийн хүчинтэй байдал | Байхгүй | `missing_student_{{$guid}}`; оюутны PUT хийхгүй | T02 |
+| Оюутны үзсэн хичээлүүд | Урьдач нөхцөл хангана | `coursesTaken=["CS201","CS202"]`, `prerequisites=["CS201","CS202"]` | T03 |
+| Оюутны үзсэн хичээлүүд | Урьдач нөхцөл хангахгүй | `coursesTaken=[]` эсвэл `["CS201"]`, `prerequisites=["CS201","CS202"]` | T05, T06 |
+| courseID-гийн хүчинтэй байдал | Байгаа | `CS313`; `PUT /courses/CS313`-аар үүсгэнэ | T01 |
+| courseID-гийн хүчинтэй байдал | Байхгүй | `missing_course_{{$guid}}`; хичээлийн PUT хийхгүй | T04 |
+| Хичээлийн урьдач нөхцөл | Бүгд үзсэн | `prerequisites=["CS201"]`, `coursesTaken=["CS201"]` | T01 |
+| Хичээлийн урьдач нөхцөл | Огт үзээгүй | `prerequisites=["CS201","CS202"]`, `coursesTaken=[]` | T05 |
+| Хичээлийн урьдач нөхцөл | Зарим нь үзсэн | `prerequisites=["CS201","CS202"]`, `coursesTaken=["CS201"]` | T06 |
+| Хичээлийн урьдач нөхцөл | Урьдач нөхцөлгүй | `prerequisites=[]`, `coursesTaken=[]` | T09 |
+| Хүсэлтийн талбар | studentID дутуу | POST body: `{"courseID":"C10"}` | T10 |
+| Хүсэлтийн талбар | courseID дутуу | POST body: `{"studentID":"S11"}` | T11 |
+| Хүсэлтийн талбар | Хоосон ID | POST body: `{"studentID":"","courseID":"C12"}` | T12 |
+| Хүсэлтийн формат | Буруу JSON | POST raw body: `{"studentID":` | T13 |
 
-| ID | Нөхцөл ба төлөөлөх оролт | HTTP | result | Нэмэлт oracle |
-|---|---|---:|---|---|
-| T01 | Active B231234567; CS201 үзсэн; CS313 requires CS201 | 201 | OK | registrationID тоо |
-| T02 | Оюутан байхгүй; C02 байгаа | 200 | ERROR_NO_STUDENT | — |
-| T03 | Inactive S03; C03 байгаа; prerequisites хангана | 200 | ERROR_INACTIVE_STUDENT | — |
-| T04 | Active S04; хичээл байхгүй | 200 | ERROR_NO_COURSE | — |
-| T05 | Active S05; taken=[]; C05 requires CS201, CS202 | 200 | ERROR_PREREQUISITES | missing=[CS201, CS202] |
-| T06 | Active S06; taken=[CS201]; C06 requires CS201, CS202 | 200 | ERROR_PREREQUISITES | missing=[CS202] |
-| T07 | Оюутан, хичээл хоёул байхгүй | 200 | ERROR_NO_STUDENT | Алдааны дараалал |
-| T08 | Inactive S08; хичээл байхгүй | 200 | ERROR_INACTIVE_STUDENT | Алдааны дараалал |
-| T09 | Active S09; taken=[]; C09 prerequisites=[] | 201 | OK | registrationID тоо |
-| T10 | Student/course setup байгаа; POST-д studentID орхисон | 400 | ERROR_BAD_REQUEST | — |
-| T11 | Student/course setup байгаа; POST-д courseID орхисон | 400 | ERROR_BAD_REQUEST | — |
-| T12 | Student/course setup байгаа; POST-д studentID="" | 400 | ERROR_BAD_REQUEST | — |
-| T13 | Student/course setup байгаа; POST body=`{"studentID":` | 400 | ERROR_BAD_JSON | — |
+Үзсэн хичээл ба урьдач нөхцөл нь хоорондоо хамааралтай: `prerequisites`-ийн бүх утга `coursesTaken` дотор байвал нөхцөл хангана. Иймээс бүх сонголтын Cartesian үржвэрийг механикаар авахгүй. Байхгүй оюутанд `status`/`coursesTaken`, байхгүй хичээлд `prerequisites` оноох боломжгүй. Урьдач нөхцөлгүй хичээлд «зарим нь үзсэн» буюу «дутуу» анги боломжгүй; хоосон `coursesTaken` ч нөхцөл хангана.
 
-T07, T08-ын давхар алдааны хүлээлтийг серверийн шалгалтын дарааллаас таамаглаж, бодит Newman ажиллуулалтаар баталсан: талбар → оюутан байгаа эсэх → active эсэх → хичээл байгаа эсэх → prerequisites.
+### Спецификаци ба хүлээгдэх үр дүн
+
+Сонголтын стратеги: **happy path 1** (T01), **дөрвөн бизнес алдааны анги тус бүрд 1** (T02–T05), **давхар алдаа 2** (T07–T08), **хязгаарын тохиолдол 2** (T09–T10) — үндсэн **9 спецификаци**. T06 болон T11–T13 нь зарим урьдач нөхцөл дутуу, өөр талбар дутуу, хоосон ID, буруу JSON-ыг нэмж хамарна. Нийт **13 спецификаци**.
+
+Доорх HTTP код ба `result` нь бүгд `POST /registrations`-ийн хүлээгдэх хариу. Ердийн POST body нь `{"studentID":"<оюутны ID>","courseID":"<хичээлийн ID>"}`; өөр body хэрэгтэй мөрүүдэд тусгайлан бичсэн. Байгаа бичлэгүүдийг тухайн спецификацийн PUT setup-аар үүсгэнэ. `missing_student_{{$guid}}`, `missing_course_{{$guid}}` нь шинэ санамсаргүй ID бөгөөд тэдгээрт PUT хийхгүй.
+
+| ID | Ангилал | Нөхцөл ба төлөөлөх оролт | HTTP статус | result | Нэмэлт oracle |
+|---|---|---|---:|---|---|
+| T01 | Happy path | `B231234567`: active, coursesTaken=`["CS201"]`; `CS313`: prerequisites=`["CS201"]` | 201 | `OK` | registrationID нь number |
+| T02 | Алдаа: оюутан байхгүй | `missing_student_{{$guid}}`; `C02`: prerequisites=`["CS201","CS202"]` | 200 | `ERROR_NO_STUDENT` | — |
+| T03 | Алдаа: оюутан идэвхгүй | `S03`: inactive, coursesTaken=`["CS201","CS202"]`; `C03`: prerequisites=`["CS201","CS202"]` | 200 | `ERROR_INACTIVE_STUDENT` | — |
+| T04 | Алдаа: хичээл байхгүй | `S04`: active, coursesTaken=`["CS201","CS202"]`; `missing_course_{{$guid}}` | 200 | `ERROR_NO_COURSE` | — |
+| T05 | Алдаа: урьдач нөхцөл хангахгүй; хоосон coursesTaken | `S05`: active, coursesTaken=`[]`; `C05`: prerequisites=`["CS201","CS202"]` | 200 | `ERROR_PREREQUISITES` | missing=`["CS201","CS202"]` |
+| T06 | Нэмэлт: зарим урьдач нөхцөл дутуу | `S06`: active, coursesTaken=`["CS201"]`; `C06`: prerequisites=`["CS201","CS202"]` | 200 | `ERROR_PREREQUISITES` | missing=`["CS202"]` |
+| T07 | Давхар алдаа: оюутан, хичээл хоёул байхгүй | `missing_student_{{$guid}}`, `missing_course_{{$guid}}`; хоёр PUT setup хоёул байхгүй | 200 | `ERROR_NO_STUDENT` | Оюутан байгаа эсэхийг түрүүлж шалгана |
+| T08 | Давхар алдаа: идэвхгүй оюутан, байхгүй хичээл | `S08`: inactive, coursesTaken=`["CS201","CS202"]`; `missing_course_{{$guid}}` | 200 | `ERROR_INACTIVE_STUDENT` | Оюутны төлөвийг хичээлээс түрүүлж шалгана |
+| T09 | Хязгаар: урьдач нөхцөлгүй, хоосон coursesTaken | `S09`: active, coursesTaken=`[]`; `C09`: prerequisites=`[]` | 201 | `OK` | registrationID нь number |
+| T10 | Хязгаар: studentID талбар дутуу | `S10`, `C10` setup байгаа; POST body: `{"courseID":"C10"}` | 400 | `ERROR_BAD_REQUEST` | — |
+| T11 | Нэмэлт: courseID талбар дутуу | `S11`, `C11` setup байгаа; POST body: `{"studentID":"S11"}` | 400 | `ERROR_BAD_REQUEST` | — |
+| T12 | Нэмэлт: хоосон studentID | `S12`, `C12` setup байгаа; POST body: `{"studentID":"","courseID":"C12"}` | 400 | `ERROR_BAD_REQUEST` | — |
+| T13 | Нэмэлт: буруу JSON | `S13`, `C13` setup байгаа; POST raw body: `{"studentID":` | 400 | `ERROR_BAD_JSON` | — |
+
+T10–T13-ын setup-д оюутан `active`, `coursesTaken=["CS201","CS202"]`, хичээл `prerequisites=["CS201","CS202"]` байна. Ингэснээр хүсэлтийн талбар/форматын алдааг бусад зөв нөхцөлөөс тусгаарлана.
+
+Энэ API-ийн дөрвөн бизнес алдаа HTTP `200` буцаадаг тул статусын oracle-оос гадна `result`-ийн oracle заавал хэрэгтэй. Талбар дутуу эсвэл ID хоосон үед HTTP `400`, `ERROR_BAD_REQUEST`; JSON parse хийх боломжгүй үед HTTP `400`, `ERROR_BAD_JSON` хүлээнэ.
+
+T07, T08-ын давхар алдааны хүлээлт нь серверийн шалгалтын дараалалтай нийцнэ: JSON parse → шаардлагатай талбар → оюутан байгаа эсэх → active эсэх → хичээл байгаа эсэх → prerequisites. Өмнөх Newman ажиллуулалтын нотолгоо [newman-pass.txt](results/newman-pass.txt)-д хадгалагдсан.
 
 ## Collection ба test independence
 
@@ -141,11 +179,10 @@ PASS, зориуд FAIL, DOWN гурван ажиллуулалт нь зөв ү
 
 `server.js`, үндсэн болон FAIL collection, `results/` доторх гурван заавал лог, README болон үе шат бүрийн commit-ууд репод хадгалагдсан. Нэмэлт нийтийн API collection, давталтын нотолгоо, npm lockfile ба автоматжуулах скрипт мөн орсон. `.gitignore` нь `.DS_Store`, `.idea/`, `node_modules/`, багшийн `.docx` болон эх `.rar` архивыг хасна.
 
-Одоогоор GitHub remote тохируулаагүй, Teams-д илгээгээгүй. GitHub дээр хоосон **public** репозиторий үүсгээд одоо байгаа commit түүхийг push хийнэ; GitHub вэбээр файл upload хийхгүй:
+GitHub репозиторий: [B232270013/lab5](https://github.com/B232270013/lab5). Commit түүхийг Git push ашиглан хадгална.
 
 ```sh
-git remote add origin https://github.com/B232270013/REPOSITORY_NAME.git
 git push -u origin master
 ```
 
-`REPOSITORY_NAME`-ийг өөрийн үүсгэсэн репозиторийн нэрээр солино. Дараа нь public репозиторийн URL-ийг Teams Assignment-д хавсаргаад **Turn in** дарна. Эдгээр илгээх алхам дуусаагүй тул локал тестүүд амжилттай болсон нь дангаараа лабыг илгээсэн гэсэн үг биш.
+Teams-д илгээхдээ `https://github.com/B232270013/lab5` линкийг Assignment-д хавсаргаад **Turn in** дарна. Teams-д илгээх алхам хараахан хийгдээгүй.

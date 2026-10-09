@@ -1,0 +1,99 @@
+{
+  "info": {
+    "name": "Lab05 — Даалгавар 1: Анхны хүсэлт ба oracle",
+    "description": "Дарааллаар ажиллуулна: идэвхтэй, CS201 үзсэн оюутан → CS201 урьдач нөхцөлтэй CS313 → бүртгэл. POST хариуг хоёр тусдаа pm.test oracle-оор шалгана.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup: оюутан B231234567",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\"]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/students/B231234567"
+      }
+    },
+    {
+      "name": "Setup: хичээл CS313",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"prerequisites\": [\"CS201\"]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/courses/CS313"
+      }
+    },
+    {
+      "name": "POST: Бүх урьдач нөхцөл хангаж бүртгүүлэхэд OK",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"studentID\": \"B231234567\", \"courseID\": \"CS313\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/registrations"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP статус 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"result = OK\", function () {",
+              "    pm.expect(pm.response.json().result).to.eql(\"OK\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
